@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import jsonify, request
-import auth, utils
+import auth, utils, json
 
 app = Flask(__name__)
 
