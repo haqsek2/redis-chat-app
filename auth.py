@@ -56,10 +56,24 @@ def login(data):
 
         if (hashed_password == data[b"password"].decode()):
             a = hashlib.sha512()
-            a.update(str(password).encode("utf-8")+str(username).encode("utf-8"))
-            token = m.hexdigest()
+            a.update(str(hashed_password).encode("utf-8")+str(username).encode("utf-8"))
+            token = str(a.hexdigest())+":"+str(user_key.split(":")[-1])
             user = {"id": user_key.split(":")[-1], "email": username,"name": data[b"name"].decode(), "token": token}
             #session["user"] = user
             return user
 
     return jsonify({"msg": "Invalid username or password"})
+
+
+def check_auth(token):
+    user_id=str(token).split(':')[-1]
+    user_data= redis_client.hgetall("user:"+str(user_id))
+    a = hashlib.sha512()
+    a.update(str(token).encode("utf-8")+str(user_data[b"email"].decode()).encode("utf-8"))
+    btoken = str(a.hexdigest())+":"+str(user_id)
+
+    if (btoken == token):
+        return True
+    else:
+        return False
+

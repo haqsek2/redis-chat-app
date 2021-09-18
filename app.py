@@ -26,3 +26,17 @@ def signup():
 			return {"status":"error","msg":"Email is invalid"}
 	else:
 		return {"status":"error","msg":"All fields are required"}
+
+
+@app.route("/api/search", methods = ['POST'])
+def search():
+	token=request.headers.get('token')
+	if token:
+		if(auth.check_auth(token)):
+			data=request.get_json(force=True)
+			query=data["query"]
+			return utils.search(query)
+		else:
+			return jsonify({"msg":"Please login"})
+	else:
+		return jsonify({"msg":"Please login"})
