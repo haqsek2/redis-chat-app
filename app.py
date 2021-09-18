@@ -16,6 +16,8 @@ def signup():
 	#name = request.args.get('name') if 'name' in request.args else ""
 
 	data = request.get_json()
+	data=json.dumps(data)
+    data = json.loads(str(data))
 	email=data.email
 	password=data.password
 	name=data.name
