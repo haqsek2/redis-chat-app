@@ -9,12 +9,16 @@ def login():
     return "wokring"
 
 
-@app.route("/signup")
+@app.route("/api/signup", methods = ['POST'])
 def signup():
-	email = request.args.get('email') if 'email' in request.args else ""
-	password = request.args.get('password') if 'password' in request.args else ""
-	name = request.args.get('name') if 'name' in request.args else ""
+	#email = request.args.get('email') if 'email' in request.args else ""
+	#password = request.args.get('password') if 'password' in request.args else ""
+	#name = request.args.get('name') if 'name' in request.args else ""
 
+	data = request.get_json()
+	email=data.email
+	password=data.password
+	name=data.name
 	# check if values are assigned
 	if(email != "" and password != "" and name != ""):
 		# validate email
