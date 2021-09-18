@@ -68,12 +68,16 @@ def login(data):
 def check_auth(token):
     user_id=str(token).split(':')[-1]
     user_data= redis_client.hgetall("user:"+str(user_id))
-    a = hashlib.sha512()
-    a.update(str(token).encode("utf-8")+str(user_data[b"email"].decode()).encode("utf-8"))
-    btoken = str(a.hexdigest())+":"+str(user_id)
+    if user_data != []:
+        
+        a = hashlib.sha512()
+        a.update(str(user_data[b"password"].decode()).encode("utf-8")+str(user_data[b"email"].decode()).encode("utf-8"))
+        btoken = str(a.hexdigest())+":"+str(user_id)
 
-    if (btoken == token):
-        return True
+        if (btoken == token):
+            return True
+        else:
+            return False
     else:
         return False
 
