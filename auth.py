@@ -15,7 +15,7 @@ def create_user(email, password, name):
     #check if email already exists
     if ( redis_client.keys(pattern='email:'+str(email)) != [] ):
         print(redis_client.keys("email:{email}"))
-        return {"status":"error","code": "email already exists"}
+        return {"status":"error","msg": "email already exists"}
     
     # Create a user
     else:
