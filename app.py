@@ -4,17 +4,13 @@ import auth, utils, json
 
 app = Flask(__name__)
 
-@app.route("/login")
+@app.route("/api/login", methods = ['POST'])
 def login():
-    return "wokring"
+    return auth.login(request.get_json(force=True))
 
 
 @app.route("/api/signup", methods = ['POST'])
 def signup():
-	#email = request.args.get('email') if 'email' in request.args else ""
-	#password = request.args.get('password') if 'password' in request.args else ""
-	#name = request.args.get('name') if 'name' in request.args else ""
-
 	data = request.get_json(force=True)
 	data=json.dumps(data)
 	data = json.loads(str(data))
