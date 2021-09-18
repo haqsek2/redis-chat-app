@@ -55,7 +55,10 @@ def login(data):
         hashed_password = m.hexdigest()
 
         if (hashed_password == data[b"password"].decode()):
-            user = {"id": user_key.split(":")[-1], "email": username,"name":data[b"name"]}
+            a = hashlib.sha512()
+            a.update(str(password).encode("utf-8")+str(username).encode("utf-8"))
+            token = m.hexdigest()
+            user = {"id": user_key.split(":")[-1], "email": username,"name": data[b"name"].decode(), "token": token}
             #session["user"] = user
             return user
 
