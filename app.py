@@ -7,13 +7,13 @@ app = Flask(__name__)
 CORS(app, resources=r'/api/*', supports_credentials=True)
 
 @app.route("/api/login", methods = ['POST'])
-@cross_origin(origin='*',headers=['Content-Type','token'])
+@cross_origin(headers=['Content-Type','token'])
 def login():
     return auth.login(request.get_json(force=True))
 
 
 @app.route("/api/signup", methods = ['POST'])
-@cross_origin(origin='*',headers=['Content-Type','token'])
+@cross_origin(headers=['Content-Type','token'])
 def signup():
 	data = request.get_json(force=True)
 	data=json.dumps(data)
@@ -33,7 +33,7 @@ def signup():
 
 
 @app.route("/api/search", methods = ['POST'])
-@cross_origin(origin='*',headers=['Content-Type','token'])
+@cross_origin(headers=['Content-Type','token'])
 def search():
 	token=request.headers.get('token')
 	if token:
@@ -48,7 +48,7 @@ def search():
 
 
 @app.route("/api/message/send", methods = ['POST'])
-@cross_origin(origin='*',headers=['Content-Type','token'])
+@cross_origin(headers=['Content-Type','token'])
 def send():
 	token=request.headers.get('token')
 	if token:
