@@ -19,7 +19,7 @@ def signup():
 	data=json.dumps(data)
 	data = json.loads(str(data))
 	email=data["email"]
-	password=data.["password"]
+	password=data["password"]
 	name=data["name"]
 	# check if values are assigned
 	if(email != "" and password != "" and name != ""):
