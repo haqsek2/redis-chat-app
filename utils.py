@@ -1,4 +1,4 @@
-import re, base64
+import re, base64, os.path
 from config import get_config
 from flask import jsonify, request
 from datetime import datetime
@@ -11,6 +11,20 @@ def validate_email(email):
 		return 1
 	else:
 		return 0
+
+
+def get_file(filename):  # pragma: no cover
+    try:
+        src = os.path.join(os.path.abspath(os.path.dirname(__file__))+"/frontend/", filename)
+        # Figure out how flask returns static files
+        # Tried:
+        # - render_template
+        # - send_file
+        # This should not be so non-obvious
+        return open(src).read()
+    except IOError as exc:
+        return str(exc)
+
 
 def search(query):
 	keys=redis_client.keys('user:*')
@@ -29,6 +43,19 @@ def search(query):
 				pass
 
 	return jsonify({"users":users})
+
+def send(data):
+	receiver_id=data["r_id"]
+	token=request.headers.get('token')
+	sender_id=str(token).split(':')[-1]
+	send_time=datetime.now()
+	msg=data["msg"]
+	next_id = redis_client.incr("total_msgs")
+	msg_key = f"msg:{next_id}"
+	redis_client.hmset(msg_key, {"sender": sender_id, "receiver": receiver_id, "time":str(send_time), 'msg':str(base64.b64encode(bytes(msg, 'utf-8')))})
+
+	return jsonify({"msg":"message sent","status":"ok"})
+
 
 def send(data):
 	receiver_id=data["r_id"]

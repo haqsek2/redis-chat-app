@@ -1,10 +1,38 @@
 from flask import Flask
-from flask import jsonify, request
-import auth, utils, json
+from flask import jsonify, request, Response
+import auth, utils, json, os.path
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app, resources=r'/api/*', supports_credentials=True)
+
+
+@app.route("/", methods = ['GET'])
+def index():
+	token=request.headers.get('token')
+	if token:
+		if(auth.check_auth(token)):
+			return redirect(url_for('dashboard'))
+		else:
+			content = utils.get_file('index.html')
+			return Response(content, mimetype="text/html")
+	else:
+		content = utils.get_file('index.html')
+		return Response(content, mimetype="text/html")
+
+@app.route("/signup", methods = ['GET'])
+def signup_page():
+	token=request.headers.get('token')
+	if token:
+		if(auth.check_auth(token)):
+			return redirect(url_for('dashboard'))
+		else:
+			content = utils.get_file('signup.html')
+			return Response(content, mimetype="text/html")
+	else:
+		content = utils.get_file('signup.html')
+		return Response(content, mimetype="text/html")
+
 
 @app.route("/api/login", methods = ['POST'])
 @cross_origin(headers=['Content-Type','token'])
@@ -13,7 +41,7 @@ def login():
 
 
 @app.route("/api/signup", methods = ['POST'])
-@cross_origin(headers=['Content-Type','token'])
+@cross_origin(origin='*', headers=['Content-Type','token'])
 def signup():
 	data = request.get_json(force=True)
 	data=json.dumps(data)
